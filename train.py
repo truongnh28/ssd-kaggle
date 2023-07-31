@@ -127,7 +127,7 @@ def train_model(net, dataloader_dict, criterion, optimizer, num_epochs):
                                                                                               duration))
                             logs_iter.append({"iter":iteration, "train_loss":loss.item()})
                             df = pd.DataFrame(logs_iter)
-                            df.to_csv("./data/ssd_logs_iter.csv")
+                            df.to_csv("ssd_logs_iter.csv")
                             t_iter_start = time.time()
                         epoch_train_loss += loss.item()
                         iteration += 1
@@ -143,11 +143,11 @@ def train_model(net, dataloader_dict, criterion, optimizer, num_epochs):
         log_epoch = {"epoch": epoch + 1, "train_loss": epoch_train_loss, "val_loss": epoch_val_loss}
         logs.append(log_epoch)
         df = pd.DataFrame(logs)
-        df.to_csv("./data/ssd_logs.csv")
+        df.to_csv("ssd_logs.csv")
         epoch_train_loss = 0.0
         epoch_val_loss = 0.0
         if ((epoch + 1) % 10 == 0):
-            torch.save(net.state_dict(), "./data/weights/ssd300_" + str(epoch + 1) + ".pth")
+            torch.save(net.state_dict(), "ssd300_" + str(epoch + 1) + ".pth")
 
 
 num_epochs = 100
