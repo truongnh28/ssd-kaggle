@@ -5,10 +5,9 @@ from extract_inform_annotation import Anno_xml
 
 
 class MyDataset(data.Dataset):
-    def __init__(self, img_list, anno_list, phase, transform, anno_xml):
+    def __init__(self, img_list, anno_list, transform, anno_xml):
         self.img_list = img_list
         self.anno_list = anno_list
-        self.phase = phase
         self.transform = transform
         self.anno_xml = anno_xml
 
@@ -30,7 +29,7 @@ class MyDataset(data.Dataset):
         ann_info = self.anno_xml(anno_file_path, width, height)
 
         # preprocessing
-        img, boxes, labels = self.transform(img, self.phase, ann_info[:, :4], ann_info[:, 4])
+        img, boxes, labels = self.transform(img, ann_info[:, :4], ann_info[:, 4])
 
         # BGR -> RGB, (height, width, channels) -> (channels, height, width)
         img = torch.from_numpy(img[:, :, (2, 1, 0)]).permute(2, 0, 1)
@@ -69,10 +68,10 @@ if __name__ == "__main__":
     color_mean = (104, 117, 123)
     input_size = 300
 
-    train_dataset = MyDataset(train_img_list, train_annotation_list, phase="train",
+    train_dataset = MyDataset(train_img_list, train_annotation_list,
                               transform=DataTransform(input_size, color_mean), anno_xml=Anno_xml(classes))
 
-    val_dataset = MyDataset(val_img_list, val_annotation_list, phase="val",
+    val_dataset = MyDataset(val_img_list, val_annotation_list,
                             transform=DataTransform(input_size, color_mean), anno_xml=Anno_xml(classes))
 
     # print(len(train_dataset))

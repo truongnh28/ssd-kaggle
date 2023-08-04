@@ -30,9 +30,9 @@ color_mean = (104, 117, 123)
 input_size = 300
 
 # img_list, anno_list, phase, transform, anno_xml
-train_dataset = MyDataset(train_img_list, train_annotation_list, phase="train",
+train_dataset = MyDataset(train_img_list, train_annotation_list,
                           transform=DataTransform(input_size, color_mean), anno_xml=Anno_xml(classes))
-val_dataset = MyDataset(val_img_list, val_annotation_list, phase="val", transform=DataTransform(input_size, color_mean),
+val_dataset = MyDataset(val_img_list, val_annotation_list, transform=DataTransform(input_size, color_mean),
                         anno_xml=Anno_xml(classes))
 
 batch_size = 42
