@@ -15,9 +15,10 @@ class MyDataset(data.Dataset):
         return len(self.img_list)
 
     def __getitem__(self, index):
-        img, gt, height, width = self.pull_item(index)
-
-        return img, gt
+        # img, gt, height, width = self.pull_item(index)
+        #
+        # return img, gt
+        return self.pull_item(index)
 
     def pull_item(self, index):
         img_file_path = self.img_list[index]

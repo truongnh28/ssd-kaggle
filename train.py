@@ -103,7 +103,7 @@ def train_model(net, dataloader_dict, criterion, optimizer, num_epochs):
                     print("(Validation)")
                 else:
                     continue
-            for images, targets in dataloader_dict[phase]:
+            for images, targets, _, _ in dataloader_dict[phase]:
                 # move to GPU
                 images = images.to(device)
                 targets = [ann.to(device) for ann in targets]
