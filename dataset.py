@@ -11,18 +11,18 @@ class MyDataset(data.Dataset):
         self.phase = phase
         self.transform = transform
         self.anno_xml = anno_xml
-    
+
     def __len__(self):
         return len(self.img_list)
-    
+
     def __getitem__(self, index):
         img, gt, height, width = self.pull_item(index)
 
         return img, gt
-    
+
     def pull_item(self, index):
         img_file_path = self.img_list[index]
-        img = cv2.imread(img_file_path) #BGR
+        img = cv2.imread(img_file_path)  # BGR
         height, width, channels = img.shape
 
         # get anno information
@@ -33,7 +33,7 @@ class MyDataset(data.Dataset):
         img, boxes, labels = self.transform(img, self.phase, ann_info[:, :4], ann_info[:, 4])
 
         # BGR -> RGB, (height, width, channels) -> (channels, height, width)
-        img = torch.from_numpy(img[:,:,(2,1,0)]).permute(2,0,1)
+        img = torch.from_numpy(img[:, :, (2, 1, 0)]).permute(2, 0, 1)
 
         # ground truth
         gt = gt = np.hstack((boxes, np.expand_dims(labels, axis=1)))
@@ -46,9 +46,9 @@ def my_collate_fn(batch):
     imgs = []
 
     for sample in batch:
-        imgs.append(sample[0]) #sample[0]=img
-        targets.append(torch.FloatTensor(sample[1])) # sample[1]=annotation
-    #[3, 300, 300]
+        imgs.append(sample[0])  # sample[0]=img
+        targets.append(torch.FloatTensor(sample[1]))  # sample[1]=annotation
+    # [3, 300, 300]
     # (batch_size, 3, 300, 300)
     imgs = torch.stack(imgs, dim=0)
 
@@ -56,24 +56,24 @@ def my_collate_fn(batch):
 
 
 if __name__ == "__main__":
-    classes = ["aeroplane", "bicycle", "bird",  "boat", "bottle", 
+    classes = ["aeroplane", "bicycle", "bird", "boat", "bottle",
                "bus", "car", "cat", "chair", "cow", "diningtable",
                "dog", "horse", "motorbike", "person", "pottedplant",
                "sheep", "sofa", "train", "tvmonitor"]
 
     # prepare train, valid, annotation list
     root_path = "./data/VOCdevkit/VOC2012/"
-    train_img_list, train_annotation_list, val_img_list, val_annotation_list = make_datapath_list(root_path)
+    train_img_list, train_annotation_list, val_img_list, val_annotation_list, trainval_img_list, trainval_annotation_list = make_datapath_list(root_path)
 
     # prepare data transform
     color_mean = (104, 117, 123)
     input_size = 300
 
     train_dataset = MyDataset(train_img_list, train_annotation_list, phase="train",
-    transform=DataTransform(input_size, color_mean), anno_xml=Anno_xml(classes))
+                              transform=DataTransform(input_size, color_mean), anno_xml=Anno_xml(classes))
 
     val_dataset = MyDataset(val_img_list, val_annotation_list, phase="val",
-    transform=DataTransform(input_size, color_mean), anno_xml=Anno_xml(classes))
+                            transform=DataTransform(input_size, color_mean), anno_xml=Anno_xml(classes))
 
     # print(len(train_dataset))
     # print(train_dataset.__getitem__(1))
@@ -88,7 +88,7 @@ if __name__ == "__main__":
     }
 
     batch_iter = iter(dataloader_dict["val"])
-    images, targets = next(batch_iter) # get 1 sample
-    print(images.size()) 
+    images, targets = next(batch_iter)  # get 1 sample
+    print(images.size())
     print(len(targets))
-    print(targets[0].size()) # xmin, ymin, xmax, ymax, label
+    print(targets[0].size())  # xmin, ymin, xmax, ymax, label

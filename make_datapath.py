@@ -7,12 +7,16 @@ def make_datapath_list(root_path):
 
     train_id_names = osp.join(root_path, "ImageSets/Main/train.txt")
     val_id_names = osp.join(root_path, "ImageSets/Main/val.txt")
+    trainval_id_names = osp.join(root_path, "ImageSets/Main/trainval.txt")
 
     train_img_list = list()
     train_annotation_list = list()
 
     val_img_list = list()
     val_annotation_list = list()
+
+    trainval_img_list = list()
+    trainval_annotation_list = list()
 
     for line in open(train_id_names):
         file_id = line.strip()  # xoá ký tự xuống dòng, xoá space
@@ -30,12 +34,20 @@ def make_datapath_list(root_path):
         val_img_list.append(img_path)
         val_annotation_list.append(anno_path)
 
-    return train_img_list, train_annotation_list, val_img_list, val_annotation_list
+    for line in open(trainval_id_names):
+        file_id = line.strip()
+        img_path = (image_path_template % file_id)
+        anno_path = (annotation_path_template % file_id)
+
+        trainval_img_list.append(img_path)
+        trainval_annotation_list.append(anno_path)
+
+    return train_img_list, train_annotation_list, val_img_list, val_annotation_list, trainval_img_list, trainval_annotation_list
 
 
 if __name__ == "__main__":
     root_path = "./data/VOCdevkit/VOC2012/"
-    train_img_list, train_annotation_list, val_img_list, val_annotation_list = make_datapath_list(root_path)
+    train_img_list, train_annotation_list, val_img_list, val_annotation_list, trainval_img_list, trainval_annotation_list = make_datapath_list(root_path)
 
     print(len(train_img_list))
     print(train_img_list[0])
