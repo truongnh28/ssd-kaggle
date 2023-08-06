@@ -5,11 +5,15 @@ from extract_inform_annotation import Anno_xml
 
 
 class VOC2012Dataset(data.Dataset):
-    def __init__(self, img_list, anno_list, transform, anno_xml):
+    def __init__(self, rootpath, img_list, anno_list, transform, anno_xml):
         self.img_list = img_list
         self.anno_list = anno_list
         self.transform = transform
         self.anno_xml = anno_xml
+        self.ids = list()
+        for name in img_list:
+            for line in open(osp.join(rootpath, 'ImageSets', 'Main', name + '.txt')):
+                self.ids.append((rootpath, line.strip()))
 
     def __len__(self):
         return len(self.img_list)
@@ -68,10 +72,10 @@ if __name__ == "__main__":
     color_mean = (104, 117, 123)
     input_size = 300
 
-    train_dataset = VOC2012Dataset(train_img_list, train_annotation_list,
+    train_dataset = VOC2012Dataset(root_path, train_img_list, train_annotation_list,
                                    transform=DataTransform(input_size, color_mean), anno_xml=Anno_xml(classes))
 
-    val_dataset = VOC2012Dataset(val_img_list, val_annotation_list,
+    val_dataset = VOC2012Dataset(root_path, val_img_list, val_annotation_list,
                                  transform=DataTransform(input_size, color_mean), anno_xml=Anno_xml(classes))
 
     # print(len(train_dataset))
