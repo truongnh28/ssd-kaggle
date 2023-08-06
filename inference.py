@@ -22,6 +22,10 @@ net = SSD(phase="inference", cfg=cfg)
 net_weights = torch.load("./data/weights/ssd300_40.pth", map_location={"cuda:0": "cpu"})
 net.load_state_dict(net_weights)
 
+plt.figure(figsize=(10, 10))
+colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255)]
+font = cv2.FONT_HERSHEY_SIMPLEX
+
 
 def show_predict(img_file_path):
     img = cv2.imread(img_file_path)
@@ -37,10 +41,6 @@ def show_predict(img_file_path):
     net.eval()
     input = img_tensor.unsqueeze(0)  # (1, 3, 300, 300)
     output = net(input)
-
-    plt.figure(figsize=(10, 10))
-    colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255)]
-    font = cv2.FONT_HERSHEY_SIMPLEX
 
     detections = output.data  # (1, 21, 200, 5) 5: score, cx, cy, w, h
     scale = torch.Tensor(img.shape[1::-1]).repeat(2)

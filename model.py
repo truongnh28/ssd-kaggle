@@ -106,7 +106,7 @@ class SSD(nn.Module):
     def __init__(self, phase, cfg):
         super(SSD, self).__init__()
         self.phase = phase
-        self.num_classes= cfg["num_classes"]
+        self.num_classes = cfg["num_classes"]
 
         #create main modules
         self.vgg = create_vgg()
@@ -256,7 +256,7 @@ def nms(boxes, scores, overlap=0.45, top_k=200):
     return keep, count
 
 
-class Detect():
+class Detect:
     def __init__(self, conf_thresh=0.01, top_k=200, nsm_thresh=0.45):
         self.softmax = nn.Softmax(dim=-1)
         self.conf_thresh = conf_thresh

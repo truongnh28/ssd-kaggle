@@ -7,7 +7,7 @@ import torch as torch
 
 from lib import *
 from make_datapath import make_datapath_list
-from dataset import MyDataset, my_collate_fn
+from dataset import VOC2012Dataset, my_collate_fn
 from transform import DataTransform
 from extract_inform_annotation import Anno_xml
 from model import SSD
@@ -30,10 +30,10 @@ color_mean = (104, 117, 123)
 input_size = 300
 
 # img_list, anno_list, phase, transform, anno_xml
-train_dataset = MyDataset(train_img_list, train_annotation_list,
-                          transform=DataTransform(input_size, color_mean), anno_xml=Anno_xml(classes))
-val_dataset = MyDataset(val_img_list, val_annotation_list, transform=DataTransform(input_size, color_mean),
-                        anno_xml=Anno_xml(classes))
+train_dataset = VOC2012Dataset(train_img_list, train_annotation_list,
+                               transform=DataTransform(input_size, color_mean), anno_xml=Anno_xml(classes))
+val_dataset = VOC2012Dataset(val_img_list, val_annotation_list, transform=DataTransform(input_size, color_mean),
+                             anno_xml=Anno_xml(classes))
 
 batch_size = 42
 train_dataloader = data.DataLoader(train_dataset, batch_size, shuffle=True, collate_fn=my_collate_fn)
@@ -103,7 +103,7 @@ def train_model(net, dataloader_dict, criterion, optimizer, num_epochs):
                     print("(Validation)")
                 else:
                     continue
-            for images, targets, _, _ in dataloader_dict[phase]:
+            for images, targets in dataloader_dict[phase]:
                 # move to GPU
                 images = images.to(device)
                 targets = [ann.to(device) for ann in targets]

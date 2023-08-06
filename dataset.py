@@ -4,7 +4,7 @@ from transform import DataTransform
 from extract_inform_annotation import Anno_xml
 
 
-class MyDataset(data.Dataset):
+class VOC2012Dataset(data.Dataset):
     def __init__(self, img_list, anno_list, transform, anno_xml):
         self.img_list = img_list
         self.anno_list = anno_list
@@ -15,10 +15,9 @@ class MyDataset(data.Dataset):
         return len(self.img_list)
 
     def __getitem__(self, index):
-        # img, gt, height, width = self.pull_item(index)
-        #
-        # return img, gt
-        return self.pull_item(index)
+        img, gt, height, width = self.pull_item(index)
+
+        return img, gt
 
     def pull_item(self, index):
         img_file_path = self.img_list[index]
@@ -69,11 +68,11 @@ if __name__ == "__main__":
     color_mean = (104, 117, 123)
     input_size = 300
 
-    train_dataset = MyDataset(train_img_list, train_annotation_list,
-                              transform=DataTransform(input_size, color_mean), anno_xml=Anno_xml(classes))
+    train_dataset = VOC2012Dataset(train_img_list, train_annotation_list,
+                                   transform=DataTransform(input_size, color_mean), anno_xml=Anno_xml(classes))
 
-    val_dataset = MyDataset(val_img_list, val_annotation_list,
-                            transform=DataTransform(input_size, color_mean), anno_xml=Anno_xml(classes))
+    val_dataset = VOC2012Dataset(val_img_list, val_annotation_list,
+                                 transform=DataTransform(input_size, color_mean), anno_xml=Anno_xml(classes))
 
     # print(len(train_dataset))
     # print(train_dataset.__getitem__(1))
